@@ -17,6 +17,10 @@ API bancaria basada en arquitectura hexagonal. Expone creación y gestión de cu
   - `security`: `JwtTokenProvider` (crea/valida tokens HS256) y `JwtFilter` (inyecta autenticación en cada request).
   - `persistence`: adaptadores/repositorios y mapeo de entidades.
   - `config`: `SecurityConfig` y otros beans.
+- Diagrama: [Arquitectura hexagonal](#diagrama-de-arquitectura-mermaid)
+- Imagen: ![Arquitectura hexagonal](docs/Arquitectura.png)
+
+
 
 ## Endpoints principales
 - `POST /cuenta` crear cuenta.
