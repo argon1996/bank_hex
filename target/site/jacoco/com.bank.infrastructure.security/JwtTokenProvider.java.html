@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtTokenProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bank-hex</a> &gt; <a href="index.source.html" class="el_package">com.bank.infrastructure.security</a> &gt; <span class="el_source">JwtTokenProvider.java</span></div><h1>JwtTokenProvider.java</h1><pre class="source lang-java linenums">package com.bank.infrastructure.security;
+
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+
+@Component
+<span class="fc" id="L11">public class JwtTokenProvider {</span>
+
+    // Usamos un secretKey para firmar el token (HS256)
+<span class="fc" id="L14">    private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);</span>
+
+<span class="fc" id="L16">    private final long validityInMs = 3600000; // 1 hora</span>
+    public long getValidityInMs() {
+<span class="nc" id="L18">        return validityInMs;</span>
+    }
+
+    public String createToken(String username, String role) {
+<span class="fc" id="L22">        Date now = new Date();</span>
+<span class="fc" id="L23">        Date expiry = new Date(now.getTime() + validityInMs);</span>
+
+<span class="fc" id="L25">        return Jwts.builder()</span>
+<span class="fc" id="L26">                .setSubject(username)  // El 'subject' es el nombre de usuario</span>
+<span class="fc" id="L27">                .claim(&quot;role&quot;, role)   // El 'claim' es el rol del usuario</span>
+<span class="fc" id="L28">                .setIssuedAt(now)</span>
+<span class="fc" id="L29">                .setExpiration(expiry)</span>
+<span class="fc" id="L30">                .signWith(secretKey)   // Firmamos el token con el secretKey</span>
+<span class="fc" id="L31">                .compact();</span>
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            // Intentamos parsear el token y verificar su validez
+<span class="fc" id="L37">            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);</span>
+<span class="fc" id="L38">            return true;</span>
+<span class="fc" id="L39">        } catch (JwtException | IllegalArgumentException e) {</span>
+<span class="fc" id="L40">            return false;</span>
+        }
+    }
+
+    public String getUsername(String token) {
+        // Extraemos el 'subject' (nombre de usuario) del token
+<span class="fc" id="L46">        return Jwts.parserBuilder()</span>
+<span class="fc" id="L47">                .setSigningKey(secretKey)</span>
+<span class="fc" id="L48">                .build()</span>
+<span class="fc" id="L49">                .parseClaimsJws(token)</span>
+<span class="fc" id="L50">                .getBody()</span>
+<span class="fc" id="L51">                .getSubject();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CuentaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bank-hex</a> &gt; <a href="index.source.html" class="el_package">com.bank.infrastructure.web</a> &gt; <span class="el_source">CuentaController.java</span></div><h1>CuentaController.java</h1><pre class="source lang-java linenums">package com.bank.infrastructure.web;
+
+import com.bank.application.dto.CrearCuentaRequest;
+import com.bank.application.dto.CuentaDTO;
+import com.bank.application.dto.MovimientoRequest;
+import com.bank.application.dto.TransaccionDTO;
+import com.bank.application.dto.TransferenciaRequest;
+import com.bank.application.usecase.CuentaUseCase;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/cuenta&quot;)
+@Tag(name = &quot;Cuentas&quot;, description = &quot;Operaciones bancarias sobre cuentas&quot;)
+public class CuentaController {
+
+        private final CuentaUseCase useCase;
+
+<span class="fc" id="L28">        public CuentaController(CuentaUseCase useCase) {</span>
+<span class="fc" id="L29">                this.useCase = useCase;</span>
+<span class="fc" id="L30">        }</span>
+
+        // ============================
+        // CREAR CUENTA
+        // ============================
+        @Operation(summary = &quot;Crear una cuenta&quot;, description = &quot;Crea una nueva cuenta en el sistema con su saldo inicial&quot;)
+        @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Cuenta creada correctamente&quot;)
+        @PostMapping
+        public CuentaDTO crearCuenta(
+                        @RequestBody CrearCuentaRequest request) {
+<span class="fc" id="L40">                return useCase.crearCuenta(request);</span>
+        }
+
+        // ============================
+        // OBTENER CUENTA
+        // ============================
+        @Operation(summary = &quot;Obtener información de una cuenta&quot;, description = &quot;Devuelve datos completos de la cuenta buscada&quot;)
+        @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Cuenta encontrada&quot;)
+        @GetMapping(&quot;/{numero}&quot;)
+        public CuentaDTO obtenerCuenta(
+                        @Parameter(description = &quot;Número de cuenta&quot;) @PathVariable String numero) {
+<span class="fc" id="L51">                return useCase.obtenerCuenta(numero);</span>
+        }
+
+        // ============================
+        // CONSULTAR SALDO
+        // ============================
+        @Operation(summary = &quot;Consultar saldo&quot;, description = &quot;Retorna el saldo actual de la cuenta&quot;)
+        @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Saldo consultado&quot;)
+        @GetMapping(&quot;/{numero}/saldo&quot;)
+        public CuentaDTO consultarSaldo(
+                        @Parameter(description = &quot;Número de cuenta&quot;) @PathVariable String numero) {
+<span class="fc" id="L62">                return useCase.consultarSaldo(numero);</span>
+        }
+
+        // ============================
+        // DEPOSITO
+        // ============================
+        @Operation(summary = &quot;Depositar dinero&quot;, description = &quot;Incrementa el saldo de la cuenta y registra la transacción&quot;)
+        @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Depósito realizado correctamente&quot;)
+        @PostMapping(&quot;/{numero}/deposito&quot;)
+        public void depositar(
+                        @Parameter(description = &quot;Número de cuenta&quot;) @PathVariable String numero,
+                        @RequestBody MovimientoRequest request) {
+<span class="fc" id="L74">                useCase.depositar(numero, request);</span>
+<span class="fc" id="L75">        }</span>
+
+        // ============================
+        // RETIRO
+        // ============================
+        @Operation(summary = &quot;Retirar dinero&quot;, description = &quot;Disminuye el saldo si hay fondos suficientes&quot;)
+        @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Retiro realizado correctamente&quot;)
+        @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Saldo insuficiente&quot;)
+        @PostMapping(&quot;/{numero}/retiro&quot;)
+        public void retirar(
+                        @Parameter(description = &quot;Número de cuenta&quot;) @PathVariable String numero,
+                        @RequestBody MovimientoRequest request) {
+<span class="fc" id="L87">                useCase.retirar(numero, request);</span>
+<span class="fc" id="L88">        }</span>
+
+        // ============================
+        // HISTORIAL
+        // ============================
+        @Operation(summary = &quot;Historial de movimientos&quot;, description = &quot;Devuelve la lista de depósitos y retiros&quot;)
+        @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Historial consultado correctamente&quot;)
+        @GetMapping(&quot;/{numero}/historial&quot;)
+        public List&lt;TransaccionDTO&gt; historial(
+                        @Parameter(description = &quot;Número de cuenta&quot;) @PathVariable String numero) {
+<span class="fc" id="L98">                return useCase.historial(numero);</span>
+        }
+
+        // ============================ 
+        // TRANSFERENCIA
+        // ============================
+
+        @PostMapping(&quot;/transferencia&quot;)
+        public void transferir(@RequestBody TransferenciaRequest request) {
+<span class="fc" id="L107">                useCase.transferir(request);</span>
+<span class="fc" id="L108">        }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

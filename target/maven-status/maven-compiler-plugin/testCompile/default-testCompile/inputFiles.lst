@@ -1,0 +1,13 @@
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\infrastructure\persistence\adapter\CuentaRepositoryAdapterIntegrationTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\infrastructure\web\GlobalExceptionHandlerTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\application\mapper\TransaccionMapperTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\domain\service\CuentaServiceTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\application\mapper\CuentaMapperTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\infrastructure\web\AuthControllerTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\application\usecase\CuentaUseCaseTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\infrastructure\security\JwtFilterTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\infrastructure\web\CuentaControllerTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\domain\model\CuentaTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\infrastructure\persistence\adapter\TransaccionRepositoryAdapterIntegrationTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\infrastructure\security\JwtTokenProviderTest.java
+C:\Users\Edward\Downloads\bank_hex_project_with_domain\src\test\java\com\bank\domain\event\TransaccionEventListenerTest.java

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CuentaUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bank-hex</a> &gt; <a href="index.source.html" class="el_package">com.bank.application.usecase</a> &gt; <span class="el_source">CuentaUseCase.java</span></div><h1>CuentaUseCase.java</h1><pre class="source lang-java linenums">package com.bank.application.usecase;
+
+import com.bank.application.dto.CrearCuentaRequest;
+import com.bank.application.dto.CuentaDTO;
+import com.bank.application.dto.MovimientoRequest;
+import com.bank.application.dto.TransaccionDTO;
+import com.bank.application.dto.TransferenciaRequest;
+import com.bank.application.mapper.CuentaMapper;
+import com.bank.application.mapper.TransaccionMapper;
+import com.bank.domain.model.Cuenta;
+import com.bank.domain.model.Transaccion;
+import com.bank.domain.service.CuentaService;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class CuentaUseCase {
+
+    private final CuentaService cuentaService;
+    private final CuentaMapper cuentaMapper;
+    private final TransaccionMapper transaccionMapper;
+
+    public CuentaUseCase(CuentaService cuentaService,
+                         CuentaMapper cuentaMapper,
+<span class="fc" id="L28">                         TransaccionMapper transaccionMapper) {</span>
+<span class="fc" id="L29">        this.cuentaService = cuentaService;</span>
+<span class="fc" id="L30">        this.cuentaMapper = cuentaMapper;</span>
+<span class="fc" id="L31">        this.transaccionMapper = transaccionMapper;</span>
+<span class="fc" id="L32">    }</span>
+
+    // -------------------------
+    // 1. Crear cuenta
+    // -------------------------
+    public CuentaDTO crearCuenta(CrearCuentaRequest request) {
+<span class="fc" id="L38">        Cuenta nueva = cuentaService.crearCuenta(</span>
+<span class="fc" id="L39">                request.getNumero(),</span>
+<span class="fc" id="L40">                request.getSaldoInicial());</span>
+<span class="fc" id="L41">        return cuentaMapper.toDTO(nueva);</span>
+    }
+
+    // -------------------------
+    // 2. Obtener cuenta
+    // -------------------------
+    public CuentaDTO obtenerCuenta(String numeroCuenta) {
+<span class="fc" id="L48">        var cuenta = cuentaService.buscarCuenta(numeroCuenta);</span>
+<span class="fc" id="L49">        return cuentaMapper.toDTO(cuenta);</span>
+    }
+
+    // -------------------------
+    // 3. Consultar saldo
+    // -------------------------
+    public CuentaDTO consultarSaldo(String numeroCuenta) {
+<span class="fc" id="L56">        BigDecimal saldo = cuentaService.consultarSaldo(numeroCuenta);</span>
+<span class="fc" id="L57">        Cuenta cuenta = new Cuenta(numeroCuenta, saldo);</span>
+<span class="fc" id="L58">        return cuentaMapper.toDTO(cuenta);</span>
+    }
+
+    // -------------------------
+    // 4. Depositar
+    // -------------------------
+    public void depositar(String numeroCuenta, MovimientoRequest request) {
+<span class="fc" id="L65">        cuentaService.depositar(numeroCuenta, request.getMonto());</span>
+<span class="fc" id="L66">    }</span>
+
+    // -------------------------
+    // 5. Retirar
+    // -------------------------
+    public void retirar(String numeroCuenta, MovimientoRequest request) {
+<span class="fc" id="L72">        cuentaService.retirar(numeroCuenta, request.getMonto());</span>
+<span class="fc" id="L73">    }</span>
+
+    // -------------------------
+    // 6. Historial
+    // -------------------------
+    public List&lt;TransaccionDTO&gt; historial(String numeroCuenta) {
+<span class="fc" id="L79">        List&lt;Transaccion&gt; lista = cuentaService.historial(numeroCuenta);</span>
+<span class="fc" id="L80">        return lista.stream()</span>
+<span class="fc" id="L81">                .map(transaccionMapper::toDTO)</span>
+<span class="fc" id="L82">                .collect(Collectors.toList());</span>
+    }
+
+    // -------------------------
+    // 7. Transferir
+    // -------------------------
+    public void transferir(TransferenciaRequest request) {
+<span class="fc" id="L89">        cuentaService.transferir(</span>
+<span class="fc" id="L90">                request.getOrigen(),</span>
+<span class="fc" id="L91">                request.getDestino(),</span>
+<span class="fc" id="L92">                request.getMonto());</span>
+<span class="fc" id="L93">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
